@@ -12,14 +12,15 @@ public class Controller {
     final static int sodaPrice = 20000;
     final static double defaultRate = 0.1;
 
-    static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0, consecutiveSelection = 0;
+    static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0;
     static double upperRate = defaultRate;
+    static boolean isReceiveReward = false, participateGacha = false;
     static ArrayList<Product> orderedProducts = new ArrayList<>();
 
     /**
      * This function is to show main menu and option to process
      */
-    public static void startMachine() {
+    public static void startMachine() throws InterruptedException {
         Menu menu = new Menu();
         initializeMenu(menu);
         int userChoice;
@@ -45,8 +46,8 @@ public class Controller {
     public static void initializeMenu(Menu menu) {
         menu.add("1. Choose the notes (Top up)");
         menu.add("2. Choose products");
-        menu.add("3. Go to day 2");
-        menu.add("4. Cancel the transaction");
+        menu.add("3. Go to next day");
+        menu.add("4. Finish the transaction");
         menu.add("5. Quit program");
     }
 
@@ -200,62 +201,29 @@ public class Controller {
     /**
      * This function is to check if the user want to finish the transaction and then receive the refund
      */
-    public static void cancelRequest() {
+    public static void cancelRequest() throws InterruptedException {
         System.out.print("Do you want end the transaction? (y/n): ");
         if (Validation.checkInputYN()) {
-            checkConsecutiveBuying();
+            Validation.checkConsecutiveBuying(orderedProducts);
+            if (participateGacha) {
+                System.out.println("Congratulations on participating in the lucky spin when you buy 3 cans of the same product in a row");
+                System.out.println("Please wait a bit when we check if you are lucky or not! ");
+                Thread.sleep(2000);
+
+                if (!isReceiveReward) {
+                    System.out.println("Good luck next time `(*>﹏<*)′");
+                }
+            }
             System.out.println("Thank you for using our service!");
             if (receiveMoney > 0) {
                 System.out.println("Please receive the refund: " + receiveMoney + " VND");
-                receiveMoney = 0;
-                amountOfCoke = 0;
-                amountOfPepsi = 0;
-                amountOfSoda = 0;
             }
-        }
-    }
-
-    /**
-     * This function is to check the Consecutive purchased products and then process the gacha if the condition is met
-     */
-    public static void checkConsecutiveBuying() {
-        Product currentProduct = null;
-        for (Product product : orderedProducts) {
-            if (currentProduct == null) {
-                currentProduct = product;
-                consecutiveSelection = 1;
-            } else if (!currentProduct.getName().equalsIgnoreCase(product.getName())) {
-                currentProduct = product;
-                consecutiveSelection = 1;
-            } else consecutiveSelection++;
-            if (consecutiveSelection == 3) {
-                checkAndAward(currentProduct);
-                currentProduct = null;
-                consecutiveSelection = 0;
-            }
-        }
-    }
-
-    /**
-     * This function is to check the budget of the machine and then process the gacha
-     *
-     * @param currentProduct purchased products met the condition
-     */
-    public static void checkAndAward(Product currentProduct) {
-        if (budget > 0) {
-            if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                System.out.println("You have won 1 free " + currentProduct.getName());
-                if (currentProduct.getName().equalsIgnoreCase("Coke")) {
-                    amountOfCoke++;
-                    budget -= cokePrice;
-                } else if (currentProduct.getName().equalsIgnoreCase("Pepsi")) {
-                    amountOfPepsi++;
-                    budget -= pepsiPrice;
-                } else if (currentProduct.getName().equalsIgnoreCase("Soda")) {
-                    amountOfSoda++;
-                    budget -= sodaPrice;
-                }
-            }
+            receiveMoney = 0;
+            amountOfCoke = 0;
+            amountOfPepsi = 0;
+            amountOfSoda = 0;
+            participateGacha=false;
+            isReceiveReward=false;
         }
     }
 }

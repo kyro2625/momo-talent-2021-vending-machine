@@ -1,6 +1,11 @@
 package util;
 
+import entity.Product;
+
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import static util.Controller.*;
 
 public class Validation {
     /**
@@ -33,5 +38,49 @@ public class Validation {
         }
         return true;
     }
-
+    /**
+     * This function is to check the Consecutive purchased products and then process the gacha if the condition is met
+     */
+    public static void checkConsecutiveBuying(ArrayList<Product> orderedProducts) {
+        Product currentProduct = null;
+        int consecutiveSelection=0;
+        for (Product product : orderedProducts) {
+            if (currentProduct == null) {
+                currentProduct = product;
+                consecutiveSelection = 1;
+            } else if (!currentProduct.getName().equalsIgnoreCase(product.getName())) {
+                currentProduct = product;
+                consecutiveSelection = 1;
+            } else consecutiveSelection++;
+            if (consecutiveSelection == 3) {
+                participateGacha = true;
+                checkAndAward(currentProduct, upperRate, budget);
+                currentProduct = null;
+                consecutiveSelection = 0;
+            }
+        }
+    }
+    /**
+     * This function is to check the budget of the machine and then process the gacha
+     *
+     * @param currentProduct purchased products met the condition
+     */
+    public static void checkAndAward(Product currentProduct, double upperRate, int budget) {
+        if (budget > 0) {
+            if (Gacha.getRandomNumber(0, 1) <= upperRate) {
+                isReceiveReward = true;
+                System.out.println("You have won 1 free " + currentProduct.getName());
+                if (currentProduct.getName().equalsIgnoreCase("Coke")) {
+                    amountOfCoke++;
+                    budget -= cokePrice;
+                } else if (currentProduct.getName().equalsIgnoreCase("Pepsi")) {
+                    amountOfPepsi++;
+                    budget -= pepsiPrice;
+                } else if (currentProduct.getName().equalsIgnoreCase("Soda")) {
+                    amountOfSoda++;
+                    budget -= sodaPrice;
+                }
+            }
+        }
+    }
 }
