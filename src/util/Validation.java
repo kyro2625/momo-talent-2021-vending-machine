@@ -34,8 +34,8 @@ public class Validation {
                 break;
             if (result.equalsIgnoreCase("N"))
                 return false;
-            System.err.println("Please input y/Y or n/N");
-            System.out.print("Enter again: ");
+            System.out.println("___Please input y/Y or n/N___");
+            System.out.print("      Enter again: ");
         }
         return true;
     }

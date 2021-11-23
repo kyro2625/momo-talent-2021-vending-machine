@@ -241,5 +241,6 @@ public class Controller {
             participateGacha=false;
             isReceiveReward=false;
         }
+        System.out.println();
     }
 }
