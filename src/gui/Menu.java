@@ -7,7 +7,9 @@ public class Menu extends Vector<String> {
     public Menu() {
         super();
     }
-
+    /**
+     * This function is to get the user choice input in the main menu
+     */
     public int getUserChoice() {
         int choice = 0;
         Scanner sc = new Scanner(System.in);
@@ -25,7 +27,9 @@ public class Menu extends Vector<String> {
         } while (!valid);
         return choice;
     }
-
+    /**
+     * This function is to get the user choice in the sub menu
+     */
     public int getUserSubChoice() {
         int choice = 0;
         Scanner sc = new Scanner(System.in);

@@ -16,6 +16,9 @@ public class Controller {
     static double upperRate = defaultRate;
     static ArrayList<Product> orderedProducts = new ArrayList<>();
 
+    /**
+     * This function is to show main menu and option to process
+     */
     public static void startMachine() {
         Menu menu = new Menu();
         initializeMenu(menu);
@@ -36,6 +39,9 @@ public class Controller {
         } while (userChoice >= 0 && userChoice != menu.size());
     }
 
+    /**
+     * This function is to show menu
+     */
     public static void initializeMenu(Menu menu) {
         menu.add("1. Choose the notes (Top up)");
         menu.add("2. Choose products");
@@ -44,15 +50,21 @@ public class Controller {
         menu.add("5. Quit program");
     }
 
+    /**
+     * This function is to display the information about day, transaction balance, products have bought
+     */
     public static void displayInformation() {
         System.out.println("\nPlease choose the note:");
         System.out.println("Day" + day);
         System.out.println("UpperRate" + upperRate);
         System.out.println("Budget" + budget);
-        System.out.println("Remain money in the machine: " + receiveMoney);
-        System.out.println("Selected Product: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda");
+        System.out.println("Transaction balance: " + receiveMoney + " VND");
+        System.out.println("Purchased products: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda");
     }
 
+    /**
+     * This function is to show Top up Menu
+     */
     public static void subMenuCash(Menu menu1) {
         menu1.add("     1 - 10.000VND");
         menu1.add("     2 - 20.000VND");
@@ -62,13 +74,16 @@ public class Controller {
         menu1.add("     6 - Return to main menu");
     }
 
+    /**
+     * This function is to show Top up option
+     */
     public static void insertCash() {
         Menu menu1 = new Menu();
         subMenuCash(menu1);
         int userChoice1;
         do {
             System.out.println("     --Choose the note--");
-            System.out.println("     Remain money in the machine: " + receiveMoney);
+            System.out.println("     Transaction balance: " + receiveMoney + " VND");
             for (Object sub : menu1) System.out.println(sub);
             userChoice1 = menu1.getUserSubChoice();
             switch (userChoice1) {
@@ -101,6 +116,9 @@ public class Controller {
         System.out.println();
     }
 
+    /**
+     * This function is to show Product menu
+     */
     public static void subMenuProduct(Menu menu2) {
         menu2.add("     1 - Coke (10.000VND)");
         menu2.add("     2 - Pepsi (10.000VND)");
@@ -108,6 +126,9 @@ public class Controller {
         menu2.add("     4 - Return to main menu");
     }
 
+    /**
+     * This function is to show product option
+     */
     public static void buyProduct() {
         if (receiveMoney > 0) {
             int userChoice2;
@@ -160,6 +181,43 @@ public class Controller {
         }
     }
 
+    /**
+     * This function is to change to the next day and check if the budget is not met the limit, so it will rate up the win rate, if it is then restart the rate up and budget limit
+     */
+    public static void changeDay() {
+        if (budget > 0) {
+            if (upperRate < 1) {
+                upperRate = upperRate + upperRate * 0.5;
+            }
+            if (upperRate >= 1) upperRate = 1;
+        } else {
+            budget = budgetLimit;
+            upperRate = defaultRate;
+        }
+        day++;
+    }
+
+    /**
+     * This function is to check if the user want to finish the transaction and then receive the refund
+     */
+    public static void cancelRequest() {
+        System.out.print("Do you want end the transaction? (y/n): ");
+        if (Validation.checkInputYN()) {
+            checkConsecutiveBuying();
+            System.out.println("Thank you for using our service!");
+            if (receiveMoney > 0) {
+                System.out.println("Please receive the refund: " + receiveMoney + " VND");
+                receiveMoney = 0;
+                amountOfCoke = 0;
+                amountOfPepsi = 0;
+                amountOfSoda = 0;
+            }
+        }
+    }
+
+    /**
+     * This function is to check the Consecutive purchased products and then process the gacha if the condition is met
+     */
     public static void checkConsecutiveBuying() {
         Product currentProduct = null;
         for (Product product : orderedProducts) {
@@ -178,6 +236,11 @@ public class Controller {
         }
     }
 
+    /**
+     * This function is to check the budget of the machine and then process the gacha
+     *
+     * @param currentProduct purchased products met the condition
+     */
     public static void checkAndAward(Product currentProduct) {
         if (budget > 0) {
             if (Gacha.getRandomNumber(0, 1) <= upperRate) {
@@ -195,40 +258,5 @@ public class Controller {
             }
         }
     }
-
-    public static void changeDay() {
-        if (budget > 0) {
-            if (upperRate < 1) {
-                upperRate = upperRate + upperRate * 0.5;
-            }
-            if (upperRate >= 1) upperRate = 1;
-        } else {
-            budget = budgetLimit;
-            upperRate = defaultRate;
-        }
-        day++;
-    }
-
-    public static void cancelRequest() {
-        //                    String [] productNames = new String[products.size()];
-//                    if (!products.isEmpty()) {
-//                        Validation.checkRewardCondition(products);
-//                    }
-//                    System.out.println(productNames[2]);
-        checkConsecutiveBuying();
-
-//        System.out.print("Do you want end the transaction? (y/n): ");
-//        if (Validation.checkInputYN()) {
-//            System.out.println("Thank you for using our service!");
-//            if (receiveMoney > 0) {
-        System.out.println("Please receive the refund: " + receiveMoney + " VND");
-        receiveMoney = 0;
-        amountOfCoke = 0;
-        amountOfPepsi = 0;
-        amountOfSoda = 0;
-//            }
-//        }
-    }
-
 
 }

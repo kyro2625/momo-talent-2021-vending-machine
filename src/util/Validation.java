@@ -1,10 +1,11 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Validation {
+    /**
+     * This function is to show check if the Input String is valid or not
+     */
     public static String checkInputString() {
         Scanner in = new Scanner(System.in);
         //loop until user input correct
@@ -16,8 +17,11 @@ public class Validation {
             } else return result;
         }
     }
+    /**
+     * This function is to check if the user input Y/N or not
+     */
     public static boolean checkInputYN() {
-        //System.out.print("Do you want to continue? (Y/N): ");
+        //loop until user input correct
         while (true) {
             String result = checkInputString();
             if (result.equalsIgnoreCase("Y"))
@@ -28,22 +32,6 @@ public class Validation {
             System.out.print("Enter again: ");
         }
         return true;
-    }
-    public static boolean checkRewardCondition(List<String> productNames) {
-        String [] names = productNames.toArray(new String[0]);
-        int count=0;
-        for (int i = 0; i < names.length-1 ; i++) {
-            System.out.println(names[i]);
-            if (names[i+1].equals(names[i])) {
-                count++;
-            } else {
-                count = 0;
-            }
-            if (count==3) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
