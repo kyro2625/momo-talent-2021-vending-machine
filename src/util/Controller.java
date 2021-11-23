@@ -56,7 +56,7 @@ public class Controller {
      * This function is to display the information about day, transaction balance, products have bought
      */
     public static void displayInformation() {
-        System.out.println("\nPlease choose the note:");
+//        System.out.println("\nPlease choose the note:");
         System.out.println("Day" + day);
 //        System.out.println("UpperRate" + upperRate);
 //        System.out.println("Budget" + budget);
@@ -200,7 +200,7 @@ public class Controller {
             }
             day++;
         } else {
-            System.err.println("You can not change day when in the current transaction!");
+            System.out.println("\nYou can not change day when in the current transaction!");
         }
     }
 
