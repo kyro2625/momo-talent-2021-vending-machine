@@ -15,12 +15,10 @@ public class Controller {
     static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0, consecutiveSelection = 0, consecutiveProduct = 0;
     static double upperRate = defaultRate;
     static ArrayList<Product> orderedProducts = new ArrayList<>();
-    static Menu menu = new Menu();
-//    static Menu menu1 = new Menu();
-//    static Menu menu2 = new Menu();
 
     public static void startMachine() {
-        initializeMenu();
+        Menu menu = new Menu();
+        initializeMenu(menu);
         int userChoice;
         do {
             displayInformation();
@@ -38,7 +36,7 @@ public class Controller {
         } while (userChoice >= 0 && userChoice != menu.size());
     }
 
-    public static void initializeMenu() {
+    public static void initializeMenu(Menu menu) {
         menu.add("1. Choose the notes (Top up)");
         menu.add("2. Choose products");
         menu.add("3. Go to day 2");
