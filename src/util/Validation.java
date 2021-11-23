@@ -17,8 +17,8 @@ public class Validation {
         while (true) {
             String result = in.nextLine().trim();
             if (result.isEmpty()) {
-                System.err.println("Not empty");
-                System.out.print("Enter again: ");
+                System.out.println("---Not empty---");
+                System.out.print("  ---Enter again: ");
             } else return result;
         }
     }
@@ -34,7 +34,7 @@ public class Validation {
                 break;
             if (result.equalsIgnoreCase("N"))
                 return false;
-            System.err.println("___Please input y/Y or n/N___");
+            System.out.println("___Please input y/Y or n/N___");
             System.out.print("      Enter again: ");
         }
         return true;
