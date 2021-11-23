@@ -15,23 +15,23 @@ public class Controller {
 
     static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0;
     static double upperRate = defaultRate;
-    static boolean isReceiveReward = false, participateGacha = false;
     static ArrayList<Product> orderedProducts = new ArrayList<>();
 
-    static public String customFormat(String pattern, double value ) {
+    static public String customFormat(String pattern, double value) {
         DecimalFormat myFormatter = new DecimalFormat(pattern);
         //        System.out.println(value + "  " + pattern + "  " + output);
         return myFormatter.format(value);
     }
+
     /**
      * This function is to show main menu and option to process
      */
-    public static void startMachine() throws InterruptedException {
+    public static void startMachine() {
         Menu menu = new Menu();
         initializeMenu(menu);
         int userChoice;
         do {
-            displayInformation();
+            displayInformationMain();
             for (Object str : menu) {
                 System.out.println(str);
             }
@@ -61,16 +61,21 @@ public class Controller {
     /**
      * This function is to display the information about day, transaction balance, products have bought
      */
-    public static void displayInformation() {
-        String balance = customFormat("###,###.###",receiveMoney);
+    public static void displayInformationMain() {
+        String balance = customFormat("###,###.###", receiveMoney);
         System.out.println("=============================================================================================");
-        System.out.println("    ***Day " + day+ " ***");
+        System.out.println("    ***Day " + day + " ***");
 //        System.out.println("Win rate: " + upperRate);
 //        System.out.println("Budget" + budget);
         System.out.println("    ***Transaction balance: " + balance + " VND***");
         System.out.println("    ***Purchased products: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda***");
         System.out.println("=============================================================================================");
+    }
 
+    public static void displayInformationSub() {
+        String balance = customFormat("###,###.###", receiveMoney);
+        System.out.println("        ***Transaction balance: " + balance + " VND***");
+        System.out.println("        ***Purchased products: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda***");
     }
 
     /**
@@ -93,7 +98,7 @@ public class Controller {
         subMenuCash(menu1);
         int userChoice1;
         do {
-            String balance = customFormat("###,###.###",receiveMoney);
+            String balance = customFormat("###,###.###", receiveMoney);
             System.out.println("     --Choose the note--");
             System.out.println("     ***Transaction balance: " + balance + " VND***");
             for (Object sub : menu1) System.out.println(sub);
@@ -148,12 +153,12 @@ public class Controller {
             subMenuProduct(menu2);
             do {
                 System.out.println("     --Choose the product--");
-                displayInformation();
+                displayInformationSub();
                 for (Object sub : menu2) System.out.println(sub);
                 userChoice2 = menu2.getUserSubChoice();
                 switch (userChoice2) {
                     case 1 -> {
-                        orderedProducts.add(new Product("Coke",cokePrice));
+                        orderedProducts.add(new Product("Coke", cokePrice));
                         if (receiveMoney < cokePrice) {
                             System.err.println("Please top up " + (cokePrice - receiveMoney) + " VND before buying");
                         } else {
@@ -197,7 +202,7 @@ public class Controller {
      * This function is to change to the next day and check if the budget is not met the limit, so it will rate up the win rate, if it is then restart the rate up and budget limit
      */
     public static void changeDay() {
-        if (receiveMoney==0 && amountOfPepsi==0 && amountOfCoke==0 && amountOfSoda==0) {
+        if (receiveMoney == 0 && amountOfPepsi == 0 && amountOfCoke == 0 && amountOfSoda == 0) {
             if (budget > 0) {
                 budget = budgetLimit;
                 if (upperRate < 1) {
@@ -218,7 +223,7 @@ public class Controller {
     /**
      * This function is to check if the user want to finish the transaction and then receive the refund
      */
-    public static void cancelRequest() throws InterruptedException {
+    public static void cancelRequest() {
         System.out.print("      Do you want end the transaction? (y/n): ");
         if (Validation.checkInputYN()) {
             Validation.checkConsecutiveBuying(orderedProducts);
@@ -226,20 +231,20 @@ public class Controller {
             System.out.println("        ----Purchased products: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda----\n");
 
             if (receiveMoney > 0) {
-                String balance = customFormat("###,###.###",receiveMoney);
+                String balance = customFormat("###,###.###", receiveMoney);
 
                 System.out.println("        ----Please receive the refund: " + balance + " VND----\n");
             }
             System.out.println("        ----Thank you for using our service!----");
-
+            String budgetLeft = customFormat("###,###.###", budget);
+            System.out.println("\t\t\t\t\t\t\t\t\t\t\t\tBudget left of the machine today: " + budgetLeft + " VND");
             System.out.println("*********************************************************************************************\n");
 
             receiveMoney = 0;
             amountOfCoke = 0;
             amountOfPepsi = 0;
             amountOfSoda = 0;
-            participateGacha=false;
-            isReceiveReward=false;
+
         }
         System.out.println();
     }

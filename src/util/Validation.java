@@ -34,7 +34,7 @@ public class Validation {
                 break;
             if (result.equalsIgnoreCase("N"))
                 return false;
-            System.out.println("___Please input y/Y or n/N___");
+            System.err.println("___Please input y/Y or n/N___");
             System.out.print("      Enter again: ");
         }
         return true;
@@ -43,7 +43,7 @@ public class Validation {
     /**
      * This function is to check the Consecutive purchased products and then process the gacha if the condition is met
      */
-    public static void checkConsecutiveBuying(ArrayList<Product> orderedProducts) throws InterruptedException {
+    public static void checkConsecutiveBuying(ArrayList<Product> orderedProducts) {
         Product currentProduct = null;
         int consecutiveSelection = 0;
         for (Product product : orderedProducts) {
@@ -55,7 +55,6 @@ public class Validation {
                 consecutiveSelection = 1;
             } else if (currentProduct.getName().equalsIgnoreCase(product.getName())) consecutiveSelection++;
             if (consecutiveSelection == 3) {
-                participateGacha = true;
                 checkAndAward(currentProduct, upperRate);
                 currentProduct = null;
                 consecutiveSelection = 0;
@@ -71,10 +70,10 @@ public class Validation {
     public static void checkAndAward(Product currentProduct, double upperRate) {
         if (budget > 0) {
             if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                if (budget< currentProduct.getPrice()) {
-                    System.out.println("You have won 1 free Coke");
+                if (budget < currentProduct.getPrice()) {
+                    System.out.println("            ------You have won 1 free Coke------");
                 } else {
-                    System.out.println("You have won 1 free " + currentProduct.getName());
+                    System.out.println("            ------You have won 1 free " + currentProduct.getName() + "------");
                     if (currentProduct.getName().equalsIgnoreCase("Coke")) {
                         amountOfCoke++;
                         budget -= cokePrice;
