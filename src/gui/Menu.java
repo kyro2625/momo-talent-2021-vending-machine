@@ -8,7 +8,7 @@ public class Menu extends Vector<String> {
         super();
     }
 
-    int getUserChoice() {
+    public int getUserChoice() {
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean valid;
@@ -26,7 +26,7 @@ public class Menu extends Vector<String> {
         return choice;
     }
 
-    int getUserSubChoice() {
+    public int getUserSubChoice() {
         int choice = 0;
         Scanner sc = new Scanner(System.in);
         boolean valid;
