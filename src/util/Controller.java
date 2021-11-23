@@ -12,7 +12,7 @@ public class Controller {
     final static int sodaPrice = 20000;
     final static double defaultRate = 0.1;
 
-    static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0, consecutiveSelection = 0, consecutiveProduct = 0;
+    static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0, consecutiveSelection = 0;
     static double upperRate = defaultRate;
     static ArrayList<Product> orderedProducts = new ArrayList<>();
 
@@ -258,5 +258,4 @@ public class Controller {
             }
         }
     }
-
 }
