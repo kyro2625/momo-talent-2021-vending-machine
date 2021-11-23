@@ -35,6 +35,7 @@ public class Controller {
                 case 2 -> buyProduct();
                 case 3 -> changeDay();
                 case 4 -> cancelRequest();
+                case 5 -> {}
                 default -> System.out.println("No supported. Enter choice again");
             }
         } while (userChoice >= 0 && userChoice != menu.size());
@@ -57,8 +58,8 @@ public class Controller {
     public static void displayInformation() {
         System.out.println("\nPlease choose the note:");
         System.out.println("Day" + day);
-        System.out.println("UpperRate" + upperRate);
-        System.out.println("Budget" + budget);
+//        System.out.println("UpperRate" + upperRate);
+//        System.out.println("Budget" + budget);
         System.out.println("Transaction balance: " + receiveMoney + " VND");
         System.out.println("Purchased products: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda");
     }
@@ -186,16 +187,21 @@ public class Controller {
      * This function is to change to the next day and check if the budget is not met the limit, so it will rate up the win rate, if it is then restart the rate up and budget limit
      */
     public static void changeDay() {
-        if (budget > 0) {
-            if (upperRate < 1) {
-                upperRate = upperRate + upperRate * 0.5;
+        if (receiveMoney==0 && amountOfPepsi==0 && amountOfCoke==0 && amountOfSoda==0) {
+            if (budget > 0) {
+                budget = budgetLimit;
+                if (upperRate < 1) {
+                    upperRate = upperRate + upperRate * 0.5;
+                }
+                if (upperRate >= 1) upperRate = 1;
+            } else {
+                budget = budgetLimit;
+                upperRate = defaultRate;
             }
-            if (upperRate >= 1) upperRate = 1;
+            day++;
         } else {
-            budget = budgetLimit;
-            upperRate = defaultRate;
+            System.err.println("You can not change day when in the current transaction!");
         }
-        day++;
     }
 
     /**
