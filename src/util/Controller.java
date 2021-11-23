@@ -14,8 +14,10 @@ public class Controller {
 
     static int budget = budgetLimit, day = 1, receiveMoney = 0, amountOfCoke = 0, amountOfPepsi = 0, amountOfSoda = 0, consecutiveSelection = 0, consecutiveProduct = 0;
     static double upperRate = defaultRate;
-    static ArrayList<Product> products = new ArrayList<>();
+    static ArrayList<Product> orderedProducts = new ArrayList<>();
     static Menu menu = new Menu();
+//    static Menu menu1 = new Menu();
+//    static Menu menu2 = new Menu();
 
     public static void startMachine() {
         initializeMenu();
@@ -53,14 +55,18 @@ public class Controller {
         System.out.println("Selected Product: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda");
     }
 
-    public static void insertCash() {
-        Menu menu1 = new Menu();
+    public static void subMenuCash(Menu menu1) {
         menu1.add("     1 - 10.000VND");
         menu1.add("     2 - 20.000VND");
         menu1.add("     3 - 50.000VND");
         menu1.add("     4 - 100.000VND");
         menu1.add("     5 - 200.000VND");
         menu1.add("     6 - Return to main menu");
+    }
+
+    public static void insertCash() {
+        Menu menu1 = new Menu();
+        subMenuCash(menu1);
         int userChoice1;
         do {
             System.out.println("     --Choose the note--");
@@ -96,98 +102,51 @@ public class Controller {
         } while (userChoice1 >= 0 && userChoice1 != menu1.size());
         System.out.println();
     }
+
+    public static void subMenuProduct(Menu menu2) {
+        menu2.add("     1 - Coke (10.000VND)");
+        menu2.add("     2 - Pepsi (10.000VND)");
+        menu2.add("     3 - Soda (20.000VND)");
+        menu2.add("     4 - Return to main menu");
+    }
+
     public static void buyProduct() {
         if (receiveMoney > 0) {
-            Menu menu2 = new Menu();
             int userChoice2;
-            menu2.add("     1 - Coke (10.000VND)");
-            menu2.add("     2 - Pepsi (10.000VND)");
-            menu2.add("     3 - Soda (20.000VND)");
-            menu2.add("     4 - Return to main menu");
+            Menu menu2 = new Menu();
+            subMenuProduct(menu2);
             do {
                 System.out.println("     --Choose the product--");
-                System.out.println("     Remain money in the machine: " + receiveMoney);
-                System.out.println("     Product has bought: " + amountOfCoke + " Coke, " + amountOfPepsi + " Pepsi, " + amountOfSoda + " Soda");
+                displayInformation();
                 for (Object sub : menu2) System.out.println(sub);
                 userChoice2 = menu2.getUserSubChoice();
                 switch (userChoice2) {
                     case 1 -> {
-                        products.add(new Product("Coke"));
+                        orderedProducts.add(new Product("Coke"));
                         if (receiveMoney < cokePrice) {
                             System.err.println("Please top up " + (cokePrice - receiveMoney) + " VND before buying");
                         } else {
                             receiveMoney -= cokePrice;
-                            if (consecutiveProduct != userChoice2) {
-                                consecutiveProduct = userChoice2;
-                                consecutiveSelection = 1;
-                            } else {
-                                consecutiveSelection++;
-                            }
-                            if (consecutiveSelection == 3) {
-                                consecutiveProduct = 0;
-                                consecutiveSelection = 0;
-                                if (budget > 0) {
-                                    if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                                        System.out.println("You have won 1 free Coke");
-                                        amountOfCoke++;
-                                        budget -= cokePrice;
-                                    }
-                                }
-                            }
                             amountOfCoke++;
                         }
                         System.out.println();
                     }
                     case 2 -> {
-                        products.add(new Product("Pepsi"));
+                        orderedProducts.add(new Product("Pepsi"));
                         if (receiveMoney < pepsiPrice) {
                             System.err.println("Please top up " + (pepsiPrice - receiveMoney) + " VND before buying");
                         } else {
                             receiveMoney -= pepsiPrice;
-                            if (consecutiveProduct != userChoice2) {
-                                consecutiveProduct = userChoice2;
-                                consecutiveSelection = 1;
-                            } else {
-                                consecutiveSelection++;
-                            }
-                            if (consecutiveSelection == 3) {
-                                consecutiveProduct = 0;
-                                consecutiveSelection = 0;
-                                if (budget > 0) {
-                                    if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                                        System.out.println("You have won 1 free Pepsi");
-                                        amountOfPepsi++;
-                                        budget -= pepsiPrice;
-                                    }
-                                }
-                            }
                             amountOfPepsi++;
                         }
                         System.out.println();
                     }
                     case 3 -> {
-                        products.add(new Product("Soda"));
+                        orderedProducts.add(new Product("Soda"));
                         if (receiveMoney < sodaPrice) {
                             System.err.println("Please top up " + (sodaPrice - receiveMoney) + " VND before buying");
                         } else {
                             receiveMoney -= sodaPrice;
-                            if (consecutiveProduct != userChoice2) {
-                                consecutiveProduct = userChoice2;
-                                consecutiveSelection = 1;
-                            } else {
-                                consecutiveSelection++;
-                            }
-                            if (consecutiveSelection == 3) {
-                                consecutiveProduct = 0;
-                                consecutiveSelection = 0;
-                                if (budget > 0) {
-                                    if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                                        System.out.println("You have won 1 free Soda");
-                                        amountOfSoda++;
-                                        budget -= sodaPrice;
-                                    }
-                                }
-                            }
                             amountOfSoda++;
                         }
                         System.out.println();
@@ -203,6 +162,42 @@ public class Controller {
         }
     }
 
+    public static void checkConsecutiveBuying() {
+        Product currentProduct = null;
+        for (Product product : orderedProducts) {
+            if (currentProduct == null) {
+                currentProduct = product;
+                consecutiveSelection = 1;
+            } else if (!currentProduct.getName().equalsIgnoreCase(product.getName())) {
+                currentProduct = product;
+                consecutiveSelection = 1;
+            } else consecutiveSelection++;
+            if (consecutiveSelection == 3) {
+                checkAndAward(currentProduct);
+                currentProduct = null;
+                consecutiveSelection = 0;
+            }
+        }
+    }
+
+    public static void checkAndAward(Product currentProduct) {
+        if (budget > 0) {
+            if (Gacha.getRandomNumber(0, 1) <= upperRate) {
+                System.out.println("You have won 1 free " + currentProduct.getName());
+                if (currentProduct.getName().equalsIgnoreCase("Coke")) {
+                    amountOfCoke++;
+                    budget -= cokePrice;
+                } else if (currentProduct.getName().equalsIgnoreCase("Pepsi")) {
+                    amountOfPepsi++;
+                    budget -= pepsiPrice;
+                } else if (currentProduct.getName().equalsIgnoreCase("Soda")) {
+                    amountOfSoda++;
+                    budget -= sodaPrice;
+                }
+            }
+        }
+    }
+
     public static void changeDay() {
         if (budget > 0) {
             if (upperRate < 1) {
@@ -215,23 +210,26 @@ public class Controller {
         }
         day++;
     }
+
     public static void cancelRequest() {
         //                    String [] productNames = new String[products.size()];
 //                    if (!products.isEmpty()) {
 //                        Validation.checkRewardCondition(products);
 //                    }
 //                    System.out.println(productNames[2]);
-        System.out.print("Do you want cancel the transaction? (y/n): ");
-        if (Validation.checkInputYN()) {
-            System.out.println("Thank you for using our service!");
-            if (receiveMoney > 0) {
-                System.out.println("Please receive the refund: " + receiveMoney + " VND");
-                receiveMoney = 0;
-                amountOfCoke=0;
-                amountOfPepsi=0;
-                amountOfSoda=0;
-            }
-        }
+        checkConsecutiveBuying();
+
+//        System.out.print("Do you want end the transaction? (y/n): ");
+//        if (Validation.checkInputYN()) {
+//            System.out.println("Thank you for using our service!");
+//            if (receiveMoney > 0) {
+        System.out.println("Please receive the refund: " + receiveMoney + " VND");
+        receiveMoney = 0;
+        amountOfCoke = 0;
+        amountOfPepsi = 0;
+        amountOfSoda = 0;
+//            }
+//        }
     }
 
 
