@@ -142,7 +142,7 @@ public class Controller {
                 userChoice2 = menu2.getUserSubChoice();
                 switch (userChoice2) {
                     case 1 -> {
-                        orderedProducts.add(new Product("Coke"));
+                        orderedProducts.add(new Product("Coke",cokePrice));
                         if (receiveMoney < cokePrice) {
                             System.err.println("Please top up " + (cokePrice - receiveMoney) + " VND before buying");
                         } else {
@@ -152,7 +152,7 @@ public class Controller {
                         System.out.println();
                     }
                     case 2 -> {
-                        orderedProducts.add(new Product("Pepsi"));
+                        orderedProducts.add(new Product("Pepsi", pepsiPrice));
                         if (receiveMoney < pepsiPrice) {
                             System.err.println("Please top up " + (pepsiPrice - receiveMoney) + " VND before buying");
                         } else {
@@ -162,7 +162,7 @@ public class Controller {
                         System.out.println();
                     }
                     case 3 -> {
-                        orderedProducts.add(new Product("Soda"));
+                        orderedProducts.add(new Product("Soda", sodaPrice));
                         if (receiveMoney < sodaPrice) {
                             System.err.println("Please top up " + (sodaPrice - receiveMoney) + " VND before buying");
                         } else {
@@ -205,15 +205,6 @@ public class Controller {
         System.out.print("Do you want end the transaction? (y/n): ");
         if (Validation.checkInputYN()) {
             Validation.checkConsecutiveBuying(orderedProducts);
-            if (participateGacha) {
-                System.out.println("Congratulations on participating in the lucky spin when you buy 3 cans of the same product in a row");
-                System.out.println("Please wait a bit when we check if you are lucky or not! ");
-                Thread.sleep(2000);
-
-                if (!isReceiveReward) {
-                    System.out.println("Good luck next time `(*>﹏<*)′");
-                }
-            }
             System.out.println("Thank you for using our service!");
             if (receiveMoney > 0) {
                 System.out.println("Please receive the refund: " + receiveMoney + " VND");

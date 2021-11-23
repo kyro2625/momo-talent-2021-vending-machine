@@ -22,6 +22,7 @@ public class Validation {
             } else return result;
         }
     }
+
     /**
      * This function is to check if the user input Y/N or not
      */
@@ -38,12 +39,13 @@ public class Validation {
         }
         return true;
     }
+
     /**
      * This function is to check the Consecutive purchased products and then process the gacha if the condition is met
      */
-    public static void checkConsecutiveBuying(ArrayList<Product> orderedProducts) {
+    public static void checkConsecutiveBuying(ArrayList<Product> orderedProducts) throws InterruptedException {
         Product currentProduct = null;
-        int consecutiveSelection=0;
+        int consecutiveSelection = 0;
         for (Product product : orderedProducts) {
             if (currentProduct == null) {
                 currentProduct = product;
@@ -51,34 +53,38 @@ public class Validation {
             } else if (!currentProduct.getName().equalsIgnoreCase(product.getName())) {
                 currentProduct = product;
                 consecutiveSelection = 1;
-            } else consecutiveSelection++;
+            } else if (currentProduct.getName().equalsIgnoreCase(product.getName())) consecutiveSelection++;
             if (consecutiveSelection == 3) {
                 participateGacha = true;
-                checkAndAward(currentProduct, upperRate, budget);
+                checkAndAward(currentProduct, upperRate);
                 currentProduct = null;
                 consecutiveSelection = 0;
             }
         }
     }
+
     /**
      * This function is to check the budget of the machine and then process the gacha
      *
      * @param currentProduct purchased products met the condition
      */
-    public static void checkAndAward(Product currentProduct, double upperRate, int budget) {
+    public static void checkAndAward(Product currentProduct, double upperRate) {
         if (budget > 0) {
             if (Gacha.getRandomNumber(0, 1) <= upperRate) {
-                isReceiveReward = true;
-                System.out.println("You have won 1 free " + currentProduct.getName());
-                if (currentProduct.getName().equalsIgnoreCase("Coke")) {
-                    amountOfCoke++;
-                    budget -= cokePrice;
-                } else if (currentProduct.getName().equalsIgnoreCase("Pepsi")) {
-                    amountOfPepsi++;
-                    budget -= pepsiPrice;
-                } else if (currentProduct.getName().equalsIgnoreCase("Soda")) {
-                    amountOfSoda++;
-                    budget -= sodaPrice;
+                if (budget< currentProduct.getPrice()) {
+                    System.out.println("You have won 1 free Coke");
+                } else {
+                    System.out.println("You have won 1 free " + currentProduct.getName());
+                    if (currentProduct.getName().equalsIgnoreCase("Coke")) {
+                        amountOfCoke++;
+                        budget -= cokePrice;
+                    } else if (currentProduct.getName().equalsIgnoreCase("Pepsi")) {
+                        amountOfPepsi++;
+                        budget -= pepsiPrice;
+                    } else if (currentProduct.getName().equalsIgnoreCase("Soda")) {
+                        amountOfSoda++;
+                        budget -= sodaPrice;
+                    }
                 }
             }
         }
